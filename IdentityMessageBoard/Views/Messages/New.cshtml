@@ -1,4 +1,10 @@
-﻿<form method="post" action="/messages/create">
+﻿@using Microsoft.AspNetCore.Identity
+@using IdentityMessageBoard.Models
+
+@inject UserManager<ApplicationUser> UserManager
+
+<form method="post" action="/messages/create">
+    <input type="hidden" name="UserId" value="@UserManager.GetUserId(User)" />
     <div>
         <label for="Content">Content</label>
         <input type="text" name="Content" />

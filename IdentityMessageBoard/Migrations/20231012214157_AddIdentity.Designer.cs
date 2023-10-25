@@ -3,6 +3,7 @@ using System;
 using IdentityMessageBoard.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityMessageBoard.Migrations
 {
     [DbContext(typeof(MessageBoardContext))]
-    partial class MessageBoardContextModelSnapshot : ModelSnapshot
+    [Migration("20231012214157_AddIdentity")]
+    partial class AddIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,10 +114,6 @@ namespace IdentityMessageBoard.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AuthorId")
-                        .HasColumnType("text")
-                        .HasColumnName("author_id");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("text")
@@ -126,9 +125,6 @@ namespace IdentityMessageBoard.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_messages");
-
-                    b.HasIndex("AuthorId")
-                        .HasDatabaseName("ix_messages_author_id");
 
                     b.ToTable("messages", (string)null);
                 });
@@ -301,16 +297,6 @@ namespace IdentityMessageBoard.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("IdentityMessageBoard.Models.Message", b =>
-                {
-                    b.HasOne("IdentityMessageBoard.Models.ApplicationUser", "Author")
-                        .WithMany("Messages")
-                        .HasForeignKey("AuthorId")
-                        .HasConstraintName("fk_messages_users_author_id");
-
-                    b.Navigation("Author");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -366,11 +352,6 @@ namespace IdentityMessageBoard.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
-                });
-
-            modelBuilder.Entity("IdentityMessageBoard.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }
